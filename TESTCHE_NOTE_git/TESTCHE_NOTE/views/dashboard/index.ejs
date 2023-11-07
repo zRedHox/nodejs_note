@@ -1,0 +1,148 @@
+<div class="container-fluid container-fluid-custom pb-5 mb-5">
+
+    <div class="row mb-4">
+        <div class="col">
+            <h4>notes,
+            </h4>
+        </div>
+        <div class="col text-end">
+            <a href="/notes/add" class="btn btn-primary">+ New Note</a>
+        </div>
+    </div>
+    <div class="group-selector" style="margin-bottom: 10px;">
+        <label for="group">Group:</label>
+        <select id="group" name="group">
+            <option value="all">ทั้งหมด</option>
+            <option value="finished">เสร็จสิ้น</option>
+            <option value="ongoing">กำลังดำเนินการ</option>
+            <option value="unfinished">ยังไม่เสร็จ</option>
+        </select>
+    </div>
+
+
+    <div class="row note-flexbox">
+        <% if (notes.length> 0) { for(var i=0; i < notes.length; i++) { %>
+                <div class="">
+             
+                    <div  class="card border-primary " data-status="<%= notes[i].status %>" style="min-height: 300px; max-height: 300px; overflow: hidden;">
+                        <a href="/notes/item/<%= notes[i]._id %>" class="card-body text-decoration-none">
+                            <h3 class="card-title">
+                                <%= notes[i].title %>
+                            </h3>
+                            <h6 class="card-title" style="color: blue;">
+                                <%= notes[i].user %>
+                            </h6>
+                            <p class="card-text" style="max-height: 150px; overflow-y: auto;">
+                                <%= notes[i].body %>
+                            </p>
+                                <p class="card-text" style="font-size: 10px; position: absolute; bottom: 5px;">
+                                    <%= notes[i].createdAt %>
+                                </p>
+                        </a>
+
+                    <% if (notes[i].status==='finished' ) { %>
+                        <span style="position: absolute; top: 10px; right: 10px;">
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: green;"></div>
+                        </span>
+                        <% } else if (notes[i].status==='ongoing' ) { %>
+                            <span style="position: absolute; top: 10px; right: 10px;">
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background-color: yellow;"></div>
+                            </span>
+                            <% } else if (notes[i].status==='unfinished' ) { %>
+                                <span style="position: absolute; top: 10px; right: 10px;">
+                                    <div style="width: 10px; height: 10px; border-radius: 50%; background-color: red;"></div>
+                                </span>
+                                <% } %>
+                        
+                    </div>
+                  
+                </div>
+                <% }} else { %>
+                    <div class="row">
+                        <div class="col-3">
+                            <img src="/img/human-3.svg" alt="Human pointing hand toward a create button">
+                        </div>
+                        <div class="col mt-md-4">
+                            <h2>Okay...</h2>
+                            <h4>Let's start with your first note!<br /><br />
+                                <a href="/notes/add">Create one!</a>
+                            </h4>
+                        </div>
+                    </div>
+                    <% } %>
+    </div>
+
+    <% if(notes.length> 0) { %>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center mt-5">
+                <% if(current==1) { %>
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <% } else { %>
+                        <li class="page-item"><a class="page-link" href="/notes">First</a></li>
+                        <% } %>
+                            <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
+                                <% if (i !==1 ) { %>
+                                    <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                    <% } %>
+                                        <% for (; i <=(Number(current) + 4) && i <=pages; i++) { %>
+                                            <% if(i==current ) { %>
+                                                <li class="page-item"><a class="page-link" href="#">
+                                                        <%= i %>
+                                                    </a></li>
+                                                <% } else { %>
+                                                    <li class="page-item"><a class="page-link"
+                                                            href="/notes/?page=<%= i %>">
+                                                            <%= i %>
+                                                        </a></li>
+                                                    <% } %>
+                                                        <% if(i==Number(current) + 4 && i < pages) { %>
+                                                            <li class="page-item"><a class="page-link" href="#">...</a>
+                                                            </li>
+                                                            <% } %>
+                                                                <% } %>
+                                                                    <% if (current==pages) { %>
+                                                                        <li class="page-item disabled"><a
+                                                                                class="page-link">Last</a></li>
+                                                                        <% } else { %>
+                                                                            <li class="page-item"><a
+                                                                                    href="/notes/?page=<%= pages %>"
+                                                                                    class="page-link">Last</a></li>
+                                                                            <% } %>
+            </ul>
+        </nav>
+
+        <% } %>
+
+</div>
+
+<script>
+   document.getElementById('group').addEventListener('change', function () {
+        const selectedGroup = this.value;
+        const noteCardsContainer = document.querySelector('.note-flexbox');
+
+        // Get all the note cards
+        const noteCards = Array.from(noteCardsContainer.querySelectorAll('.card[data-status]'));
+
+         // Filter the note cards based on the selected group
+       const filteredNoteCards = noteCards.filter(function (card) {
+           const noteStatus = card.dataset.status;
+           return selectedGroup === 'all' || selectedGroup === noteStatus;
+       });
+
+       // Add the filtered note cards back to the container in the desired order
+       filteredNoteCards.forEach(function (card) {
+           card.classList.remove('hidden');
+           noteCardsContainer.appendChild(card);
+       });
+
+       // Hide the remaining note cards
+       noteCards.forEach(function (card) {
+           if (!filteredNoteCards.includes(card)) {
+               card.classList.add('hidden');
+           }
+       });
+   });
+
+
+
+</script>

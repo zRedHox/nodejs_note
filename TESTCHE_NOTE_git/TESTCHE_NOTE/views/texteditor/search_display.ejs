@@ -1,0 +1,80 @@
+<div class="row">
+    <div class="w3-col s12">
+        <div class="w3-container" style="position: relative;">
+            <a href="/Testchem" style="text-decoration: none; position: absolute; bottom: -122px; left: 70px;">
+                <h1 style="margin-left: 8px;">Testchem Notes.</h1>
+            </a>
+            <div class="w3-container" style="position: absolute; bottom: -105px; left:370px">
+                <form class="" role="search" method="POST" action="/Testchem/search">
+                    <input type="search" name="searchTerm" class="" placeholder="Search..." aria-label="Search">
+                </form>
+            </div>
+        </div>
+
+        <div class="w3-container" style="position: relative;">
+            <a href="/Testchem/add" class="w3-button w3-xlarge w3-circle w3-hover-green"
+                style="background-color: #678983; position: absolute; bottom: -105px; right: 120px;">+</a>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="width: 100%; display: flex; justify-content: center;">
+
+
+    <div class="note-flexbox " style="justify-content: center; margin-top: 120px;">
+            <div class="row">
+                <% if(searchResults !='' ) { %>
+                    <% searchResults.forEach(function (notes, index) { %>
+            
+                    
+
+                        <div class="w3-container">
+                            <div class=" w3-white w3-border-bottom" data-status="<%= notes.status %>" style="height: 300px; width: 500px; overflow: hidden;  position: relative; border-top-left-radius: 20px;
+                            border-top-right-radius: 20px;">
+                                <a href="/Testchem/item/<%= notes._id %>" class=" " style="text-decoration: none;">
+                                    <div class="w3-container">
+                                        <p class="" style="max-height: 150px; overflow-y: auto; padding-top: 30px;">
+                                            <%- notes.content %>
+                                        </p>
+                        
+                                    </div>
+                                </a>
+                        
+                                <div class="w3-container"
+                                    style="background-color: black; width: 100%; height: 50px; position: absolute; top: 0px; ">
+                                    <a href="/Testchem/item/<%= notes._id %>" class=" " style="text-decoration: none;">
+                                        <span style="display: flex; align-items: center; margin-top: 15px;">
+                                            <div style="width: 20px; height: 20px; border-radius: 50%; background-color: white;"></div>
+                                            <p class=""
+                                                style="font-size: 20px; color:white; position: absolute; left: 30px; margin-left: 15px;">
+                                                <%= notes.title %>
+                                            </p>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="w3-container"
+                                    style="background-color: black; width: 100%; height: 20px; position: absolute; bottom: 0px; ">
+                                    <p class="" style="font-size: 10px; color:white; position: absolute; bottom: -8px; right: 5px;">
+                                        <%= notes.createdAt %> | <%= notes.user %>
+                                    </p>
+                                </div>
+                            </div>
+                        
+                        </div>
+            
+                        <% }) %>
+                            <% } else { %>
+                                <p>No items found.</p>
+                                <% } %>
+            
+            </div>
+
+        
+    </div>
+
+</div>
+
+
+
+   
+

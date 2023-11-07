@@ -1,0 +1,120 @@
+<!-- Create the editor container -->
+
+    <form action="/Testchem/item/<%= note._id %>?_method=PATCH" method="POST" style="display: inline;">
+        <div class="scrolling-container" style="width: 100%;">
+            <div id="editor" style="background-color: white; height: 700px; width: 100%;">
+                <!-- Quill editor content -->
+                <%- note.content%>
+            </div>
+        </div>
+        <input type="hidden" name="editorContent" id="editorContent">
+        <button class="w3-button w3-round-large w3-green" type="submit" style="position: absolute; right: 20px; ">Update</button>
+    </form>
+    <form id="deleteForm" action="/Testchem/item-delete/<%= note._id %>?_method=DELETE" method="POST"
+        class="position-relative" style="display: inline;">
+        <button class="w3-button w3-round-large w3-red" type="button" style="position: absolute; right: 190px; "
+            onclick="confirmDelete()">Delete Note</button>
+    </form>
+
+        <a href="/Testchem" class="w3-button w3-round-large w3-yellow" type="button" style="position: absolute; right: 110px; " >Home</a>
+
+
+
+    <script>
+        function confirmDelete() {
+                // Display the confirmation modal
+                // You can use any modal library or custom implementation
+                // Here's an example using the built-in JavaScript `confirm` function
+                const confirmed = confirm("ต้องการลบโน๊ตนี้ใช่หรือไม่ ?");
+
+                // If the user confirms the deletion, submit the form
+                if (confirmed) {
+                    document.getElementById("deleteForm").submit();
+                }
+            }
+    </script>
+
+
+
+<!-- Include the Quill library -->
+<script src="/js/quill.js"></script>
+
+
+
+<!-- Initialize Quill editor -->
+<script>
+    var quill = new Quill('#editor', {
+        modules: {
+            history: {
+                delay: 2000,
+                maxStack: 500,
+                userOnly: true
+            },
+            toolbar: [
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                [{ 'font': [] }, { 'size': [] }],
+                [{ 'align': [] }],
+                ['link', 'image'],
+                [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+                ['blockquote', 'code-block', 'formula'],
+                ['clean']
+            ]
+        },
+        scrollingContainer: '#scrolling-container',
+        placeholder: 'write something ...',
+        theme: 'snow' // or 'bubble'
+    });
+    
+</script>
+
+<script>
+    const form = document.querySelector('form');
+    const editorContentInput = document.getElementById('editorContent');
+
+    form.addEventListener('submit', () => {
+        const editorContent = quill.root.innerHTML;
+
+        // Extract image data from the editor content
+        const imageData = extractImageData(editorContent);
+
+        // Save the image data or process it as needed
+        saveImageData(imageData);
+
+        // Set the sanitized editor content as the value of the hidden input
+        editorContentInput.value = sanitizeEditorContent(editorContent);
+    });
+
+
+    // Function to extract image data from the editor content
+    function extractImageData(editorContent) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(editorContent, 'text/html');
+        const imgElements = doc.querySelectorAll('img');
+
+        const imageData = [];
+
+        imgElements.forEach((img) => {
+            const src = img.getAttribute('src');
+            imageData.push(src);
+        });
+
+        return imageData;
+    }
+
+    // Function to save image data
+    function saveImageData(imageData) {
+        // Perform any necessary processing or save the image data to your database
+        console.log(imageData);
+    }
+
+    // Function to sanitize the editor content
+    function sanitizeEditorContent(editorContent) {
+        // Perform any necessary sanitization or cleaning of the editor content
+        // For example, you can remove script tags or other potentially harmful elements
+
+        // Return the sanitized editor content
+        return editorContent;
+    }
+</script>

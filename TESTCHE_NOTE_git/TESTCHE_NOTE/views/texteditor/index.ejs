@@ -1,0 +1,122 @@
+<div class="row" >
+    <div class="w3-col s12">
+        <div class="w3-container" style="position: relative;">
+        <a href="/Testchem" style="text-decoration: none; position: absolute; bottom: -122px; left: 70px;">
+    <h1 style="margin-left: 8px;">Testchem Notes.</h1>
+    </a>
+    <div class="w3-container" style="position: absolute; bottom: -105px; left:370px">
+    <form class="" role="search" method="POST"
+        action="/Testchem/search">
+        <input type="search" name="searchTerm" class="" placeholder="Search..."
+            aria-label="Search">
+    </form>
+    </div>
+    </div>
+    
+    <div class="w3-container" style="position: relative;">
+    <a href="/Testchem/add" class="w3-button w3-xlarge w3-circle w3-hover-green" style="background-color: #678983; position: absolute; bottom: -105px; right: 120px;">+</a>
+        </div>
+        </div>
+</div>
+
+
+
+<div class="row" style="width: 100%; display: flex; justify-content: center;">
+        
+
+    <div class="note-flexbox " style="justify-content: center; margin-top: 120px;">
+        
+       
+    <% if (notes.length> 0) { for(var i=0; i <  notes.length; i++) { %>
+           
+            <div class="w3-container">
+                <div class=" w3-white w3-border-bottom" data-status="<%= notes[i].status %>"
+                    style="height: 300px; width: 500px; overflow: hidden;  position: relative; border-top-left-radius: 20px;
+    border-top-right-radius: 20px;">
+                    <a href="/Testchem/item/<%= notes[i]._id %>" class=" " style="text-decoration: none;">
+                        <div class="w3-container">
+                        <p class="" style="max-height: 150px; overflow-y: auto; padding-top: 30px;">
+                            <%- notes[i].content %>
+                        </p>
+                        
+                        </div>
+                    </a>
+                    
+                    <div class="w3-container" style="background-color: black; width: 100%; height: 50px; position: absolute; top: 0px; ">
+                        <a href="/Testchem/item/<%= notes[i]._id %>" class=" " style="text-decoration: none;">
+                        <span style="display: flex; align-items: center; margin-top: 15px;">
+                        <div style="width: 20px; height: 20px; border-radius: 50%; background-color: white;"></div><p class="" style="font-size: 20px; color:white; position: absolute; left: 30px; margin-left: 15px;">
+                            <%= notes[i].title %>
+                        </p>
+                            </span>
+                            </a>
+                    </div>
+                    <div class="w3-container" style="background-color: black; width: 100%; height: 20px; position: absolute; bottom: 0px; ">
+                        <p class="" style="font-size: 10px; color:white; position: absolute; bottom: -8px; right: 5px;"><%= notes[i].createdAt %>   | <%= notes[i].user %>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <% }} else { %>
+                <div class="row">
+                    <div class="">
+
+                    </div>
+                    <div class="">
+                        <h2>Okay...</h2>
+                        <h4>Let's start with your first note!<br /><br />
+                            <a href="/Testchem/add">Create one!</a>
+                        </h4>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+             
+</div>
+
+<!-- Pagination -->
+<% if (notes.length> 0) { %>
+    <nav class="pagination">
+        <ul class="pagination-list">
+            <% if (current==1) { %>
+                <li class="pagination-item disabled"><a class="pagination-link" href="#">Previous</a></li>
+                <% } else { %>
+                    <li class="pagination-item"><a class="pagination-link" href="/Testchem">First</a></li>
+                    <% } %>
+
+                        <% var i=(Number(current)> 5 ? Number(current) - 4 : 1) %>
+                            <% if (i !==1) { %>
+                                <li class="pagination-item disabled"><a class="pagination-link" href="#">...</a></li>
+                                <% } %>
+
+                                    <% for (; i <=Number(current) + 4 && i <=pages; i++) { %>
+                                        <% if (i==current) { %>
+                                            <li class="pagination-item active"><a class="pagination-link" href="#">
+                                                    <%= i %>
+                                                </a></li>
+                                            <% } else { %>
+                                                <li class="pagination-item"><a class="pagination-link"
+                                                        href="/Testchem/?page=<%= i %>">
+                                                        <%= i %>
+                                                    </a></li>
+                                                <% } %>
+
+                                                    <% if (i==Number(current) + 4 && i < pages) { %>
+                                                        <li class="pagination-item disabled"><a class="pagination-link"
+                                                                href="#">...</a></li>
+                                                        <% } %>
+                                                            <% } %>
+
+                                                                <% if (current==pages) { %>
+                                                                    <li class="pagination-item disabled"><a
+                                                                            class="pagination-link">Last</a></li>
+                                                                    <% } else { %>
+                                                                        <li class="pagination-item"><a
+                                                                                href="/Testchem/?page=<%= pages %>"
+                                                                                class="pagination-link">Last</a></li>
+                                                                        <% } %>
+        </ul>
+    </nav>
+    <% } %>

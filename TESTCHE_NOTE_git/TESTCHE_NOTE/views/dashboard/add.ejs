@@ -1,0 +1,100 @@
+<div class="container-fluid container-fluid-custom pb-5 mb-5">
+
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/notes">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Add Note</li>
+                </ol>
+            </nav>
+            <div class="col d-flex justify-content-between align-items-center">
+                <h1 class="h3">Add Note</h1>
+            </div>
+        </div>
+    </div>
+
+
+    <form action="/notes/add" method="POST" class="position-relative">
+        <div class="form-group mb-4 " style="left:1px; top:1px; right: 1px; ;">
+            <input type="text" class="form-control fw-bold border-0 fs-4" id="title" name="title" placeholder="Title"
+                required>
+        </div>
+
+        <div class="form-group mb-4 " style="left:1px;  right: 1px;">
+            <input type="text" class="form-control fw-bold border-0 fs-4" id="user" name="user" placeholder="username" required>
+        </div>
+        
+
+        <div class="form-group mb-4">
+            <textarea class="form-control pt-5 fs-4" id="body" name="body" placeholder="Take a note..."
+                rows="12"></textarea>
+                
+            </div>
+
+        </div>
+        
+       
+        <script>
+
+
+            document.getElementById("body").addEventListener("paste", function (event) {
+                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                var imagePasted = false;
+
+                console.log("Number of items:", items.length); // Log the number of items
+
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    console.log("Item:", item); // Log the item object
+                    if (!imagePasted && (item.type === "image/png" || item.type === "image/jpeg")) {
+                        imagePasted = true;
+
+                        var blob = item.getAsFile();
+                        var reader = new FileReader();
+
+                        reader.onload = function (event) {
+                            var imageUrl = event.target.result;
+
+                            var img = document.createElement("img");
+                            img.src = imageUrl;
+                            img.classList.add("pasted-image");
+                            img.style.maxWidth = "100%"; // Set maximum width to 100% of the container
+                            img.style.maxHeight = "100%"; // Set maximum height to 100% of the container
+
+                            // Append the image to the note body
+                            var noteBody = document.getElementById("body");
+                            noteBody.appendChild(img);
+                        };
+
+                        reader.readAsDataURL(blob);
+                    }
+                }
+            });
+
+
+        </script>
+
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg position-relative" style="top:15px">+ Add Note</button>
+        </div>
+
+    </form>
+
+</div>
+
+<!--* ตั้งสี --->
+<!-- <div class="mt-3 position-relative">
+    <label for="fontColor">Font Color:</label>
+    <input type="color" id="fontColor" name="fontColor" value="#000000">
+</div>
+<div class="mt-3 position-relative">
+    <label for="fontStyle">Text Style:</label>
+    <select id="fontStyle" name="fontStyle">
+        <option value="">None</option>
+        <option value="italic">Italic</option>
+        <option value="bold">Bold</option>
+        <option value="underline">Underline</option>
+    </select>
+</div> -->
